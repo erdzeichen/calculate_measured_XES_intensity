@@ -1,0 +1,22 @@
+Field,description,value,SIvalue,SIconvert,units
+Thickness,sample thickness,10.0,0.01,0.001,mm
+Theta,input angle,45.0,0.7853981633955002,0.017453292519900004,degree
+Phi,output angle,45.0,0.7853981633955002,0.017453292519900004,degree
+BeamFlux,incoming photon flux,100000000000000.0,100000000000000.0,1.0,Photons/s
+Crystals,Number of crystals in the setup,2.0,2.0,1.0,
+BeamSize,vertical beam size,0.1,1e-07,1e-06,micron
+DetecReflec,crystal refl. in bragg,0.1,0.1,1.0,
+DetecLine,spectral fraction of emission line captured,0.1,0.1,1.0,
+DetecRadius,Radius of the Detector,50.0,0.05,0.001,mm
+DetecDis,sample Detector distance,1.0,1.0,1.0,m
+DetecAbsorb,Fraction of absorption in space,0.4,0.4,1.0,
+EnIn,Excitation energy,7112.0,7112.0,1.0,eV
+EnOut,emission energy,6403.9,6403.9,1.0,eV
+SamMol,Sample Molar concentration,5.0,5.0,1.0,mMol/l
+SamDen,Sample Mass density,,,0.001,g/cm3
+Sam2Mol,secon sample Molar con,,,1.0,mMol/l
+Sam2Den,second sample density,,,0.001,g/cm3
+SolDen,Solvent mass density,1.0,0.001,0.001,g/cm3
+SolCon,Solvent Concentration (rest water),100.0,1.0,0.01,\%
+m_fac,the m factor is for playing with the self absorption,1.0,1.0,1.0,
+SamRel,relation between the samples,,,1.0,

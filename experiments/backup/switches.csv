@@ -1,0 +1,4 @@
+Field,description,value
+xraylib,switch to indicate if xraylib was used,True
+type,"sample type 0-liquid, 1-solid",0.0
+self_absorb,turns on and of the self absorption correction,True

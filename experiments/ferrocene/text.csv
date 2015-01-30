@@ -1,0 +1,12 @@
+Field,description,value
+exp,name of experiment folder,ferrocene
+Absorber,Atom of interest,Fe
+lines,"emission lines, can be list",K-L3
+sample_formula,"Formulas, Elements start large, floats allowed",FeH
+sample_2_formula,"Formulas, Elements start large, floats allowed",None
+solvent_formula,same like sample formula,Water
+comment,well here we can leave a comment,nan
+inner_loop,stores the string of the inner loop,"arange(6000,8000,200)"
+what_inner,stores what was scanned as inner loop,None
+outer_loop,stores the string of the outer loop,None
+what_outer,stores what is looped in the outer,None

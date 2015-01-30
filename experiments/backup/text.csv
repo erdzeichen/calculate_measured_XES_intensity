@@ -1,0 +1,7 @@
+Field,description,value
+exp,name of experiment folder,
+Absorber,Atom of interest,Fe
+lines,"emission lines, can be list",0
+sample_formula,"Formulas, Elements start large, floats allowed",Fe(C5H5)2
+sample_2_formula,"Formulas, Elements start large, floats allowed",
+solvent_formula,same like sample formula,Water
