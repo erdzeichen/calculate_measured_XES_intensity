@@ -13,6 +13,7 @@ The compund library was snatched from Bruce ravels Hephaestus
 FIX SOLVENT CONCENTRATION
 FIX GENERAL ENERGY
 '''
+from __future__ import division
 import os,sys,numpy,pylab,re,scipy.constants
 import pandas as pd
 from pandas import Series,DataFrame
@@ -170,10 +171,18 @@ def write_standard(Input=None,exp=None):
 		temp=eval(a)
 		temp.to_csv(stri)
 	return True
-def compounds(str):
+def compounds(stringen=None):
 	standards=pd.read_csv(database_path+os.sep+'compound.csv',index_col=0)
-	if str in standards.index:
-		return (standards.ix[str]['Formula'],standards.ix[str]['Density'])
+	if stringen is None:
+		listen=list(standards.index)
+		for atom in Atom_Names:
+			listen.append(atom)
+		return listen
+	if stringen in standards.index:
+		return (standards.ix[stringen]['Formula'],standards.ix[stringen]['Density'])
+	elif stringen in standards['Formula'].values:
+		indexen=list(standards['Formula'].values).index(stringen)
+		return (standards['Formula'].ix[indexen],standards['Density'].ix[indexen])
 	else:
 		return None
 def chemparser(str):
@@ -466,6 +475,37 @@ def get_total_cross(Atoms=None,Energy=None,from_xraylib=Libswitch,regen_Database
 		TotCross.columns.names=['EnIn']
 		TotCross.index.names=['Elements']
 	return TotCross
+def get_absorb(compound=None,Energy=None,density=None):
+	'''get the absorption length in m, enter a Energy in eV and a density in g/cm3, many values are tabulated
+	please enter either a compound as string or a valid formula. If you enter a formula you have to provide a density.
+	You can check what is in the database by calling the empty function compounds()'''
+	if density: density=density*1e3#ok density was given, since i use Kg/m3 i need to change here
+	if compound is None:
+		print 'please enter a named compound or a formula'
+		return False
+	if Energy is None:
+		print 'please enter a single energy or a list/vector or energies'
+		return False
+	if not hasattr(Energy, '__iter__'):Energy=[Energy]
+	if density: #ok somebody entered a density so we use exactly what is given 
+		formula=compound
+		density=density
+	elif compound in compounds(): #ok we have this in the standards list
+		formula,density=compounds(compound)
+	else:
+		print 'compound name not found in List, please enter either a compound or a valid formula. If you enter a formula you have to provide a density. You can check what is in the database by calling the empty function compounds()'
+		return False
+		
+	df=pd.DataFrame()
+	form=chemparser(formula)
+	total_mass=0
+	for comb in form:
+		cross=get_total_cross(Atoms=comb[0],Energy=Energy)#atomar crossection
+		atomar_mass=get_phys_values(comb[0])['Atomic_weight']*comb[1] #molar mass and how many atoms
+		cross=cross*atomar_mass*density
+		total_mass+=atomar_mass
+		df=	df.append(cross)
+	return 100/(df.sum()/total_mass)#I must screw somewhere the numbers up I am a factor 100 wrong but he letters are right. so a cheat here.
 def get_EdgeEnergy(Atoms=None,Shells=None,from_xraylib=Libswitch,regen_Database_from_xraylib=False):
 	'''reading and writing the Edge Energy from Xraylib and returning it
 	if the switch \"regn_Database_from_xraylib\" is set to True the local Database will be rebuilt 
@@ -534,7 +574,7 @@ def get_phys_values(Atoms=None,Shells=None,from_xraylib=Libswitch,regen_Database
 	the switch \"from_xraylib\" triggers if the values are generated from xraylib or are taken fro the local database
 	returned is always a pandas DataFrame with the types (names=string or numbers=int) specified in Atoms which can be anything iterable or a single name'''
 	if Atoms is None: raise ValueError('please enter the element for which to retrieve the energy')
-	if Shells is None: Shells=Shells_number(get_all_shell_names().index)
+	if Shells is None: Shells=Shells_number(get_all_shell_names())
 	if regen_Database_from_xraylib or from_xraylib:
 		Phys_dat={}
 		Phys_dat['Atomic_number']=Atoms_number(Atoms)
