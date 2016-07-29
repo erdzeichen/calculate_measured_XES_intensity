@@ -37,7 +37,7 @@ if 1: #names of shells and lines and atoms behind if to use code folding Libswit
 	file_path=os.path.dirname(os.path.realpath(__file__))
 	database_path=file_path+os.sep+'databases'
 	Libswitch=found_xraylib
-	#Libswitch=True
+	Libswitch=True
 
 def read_lib_entries(from_xraylib=False,regen_Database_from_xraylib=False):
 	'''the xraylib has an interesting way to parse the name to the integer that is needed to retrieve the values from the library to avoid recoding the entire project i wrote this little namine parser. It retruns first a Pandas.Series with the shell name as index and as a secon a Pandas.Dataframe with a double index, the first index is from which shell the second index is to which shell the transition goes. The third is a series with pseudo names like Kalpha.'''		
@@ -475,7 +475,7 @@ def get_total_cross(Atoms=None,Energy=None,from_xraylib=Libswitch,regen_Database
 		TotCross.columns.names=['EnIn']
 		TotCross.index.names=['Elements']
 	return TotCross
-def get_absorb(compound=None,Energy=None,density=None):
+def get_absorb(compound=None,Energy=None,density=None,from_xraylib=Libswitch):
 	'''get the absorption length in m, enter a Energy in eV and a density in g/cm3, many values are tabulated
 	please enter either a compound as string or a valid formula. If you enter a formula you have to provide a density.
 	You can check what is in the database by calling the empty function compounds()'''
@@ -500,7 +500,7 @@ def get_absorb(compound=None,Energy=None,density=None):
 	form=chemparser(formula)
 	total_mass=0
 	for comb in form:
-		cross=get_total_cross(Atoms=comb[0],Energy=Energy)#atomar crossection
+		cross=get_total_cross(Atoms=comb[0],Energy=Energy,from_xraylib=from_xraylib)#atomar crossection
 		atomar_mass=get_phys_values(comb[0])['Atomic_weight']*comb[1] #molar mass and how many atoms
 		cross=cross*atomar_mass*density
 		total_mass+=atomar_mass

@@ -181,7 +181,7 @@ class MyFrame(wx.Frame):
 		    self.MainFrame_statusbar.SetStatusText(MainFrame_statusbar_fields[i], i)
 		self.AngleLabel.SetBackgroundColour(wx.Colour(255, 255, 255))
 		self.AngleLabel.SetForegroundColour(wx.Colour(0, 0, 0))
-		self.Crystals.SetSelection(2)
+		self.Crystals.SetSelection(4)
 		self.EnergyLabel.SetFont(wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 1, ""))
 		self.EnInLabel.SetFont(wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.BOLD, 0, ""))
 		self.EnIn.SetBackgroundColour(wx.Colour(255, 124, 106))
@@ -298,7 +298,7 @@ class MyFrame(wx.Frame):
 		self.zahlen.value['Theta']=self.read_ctl(self.Theta)
 		self.zahlen.value['Phi']=self.read_ctl(self.Phi)
 		self.zahlen.value['Thickness']=self.read_ctl(self.Thickness)
-		self.zahlen.value['Crystals']=self.Crystals.GetSelection()
+		self.zahlen.value['Crystals']=self.Crystals.GetSelection()+1#all starts at 0
 		self.zahlen.value['DetecDis']=self.read_ctl(self.DetecDis)
 		self.zahlen.value['DetecRadius']=self.read_ctl(self.DetecRadius)
 		self.zahlen.value['DetecLine']=self.read_ctl(self.DetecLine)
@@ -587,7 +587,7 @@ class MyFrame(wx.Frame):
 		dlg.Destroy() # finally destroy it when finished.
 	def onSolventChoice(self, event):  # wxGlade: MyFrame.<event_handler>
 		self.solvent_formula.SetValue(self.standards_list[event.GetInt()])
-		self.SolDen.SetValue('%s'%(self.standards.Density[self.standards_list[event.GetInt()]]/self.zahlen.SIconvert['SamDen']))
+		self.SolDen.SetValue('%s'%(self.standards.Density[self.standards_list[event.GetInt()]]*self.zahlen.SIconvert['SamDen']))
 	def onLineChoice(self, event):  # wxGlade: MyFrame.<event_handler>
 		a=str(self.read_ctl(self.Absorber))
 		b=self.Line_Names[event.GetInt()]
