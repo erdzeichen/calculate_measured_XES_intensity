@@ -28,7 +28,8 @@ if 1:#check if there is an load xraylib in the path and attempt to load the x-ra
 			import _xraylib as xl
 			found_xraylib=True
 		except:
-			raise ImportError('Importing the library went wrong check the installation')
+			found_xraylib=False
+			print 'Importing the library went wrong check the installation'
 	else:
 		found_xraylib=False
 
@@ -475,10 +476,11 @@ def get_total_cross(Atoms=None,Energy=None,from_xraylib=Libswitch,regen_Database
 		TotCross.columns.names=['EnIn']
 		TotCross.index.names=['Elements']
 	return TotCross
-def get_absorb(compound=None,Energy=None,density=None,from_xraylib=Libswitch):
+def get_absorb(compound=None,Energy=None,density=None,from_xraylib=Libswitch,length=None):
 	'''get the absorption length in m, enter a Energy in eV and a density in g/cm3, many values are tabulated
 	please enter either a compound as string or a valid formula. If you enter a formula you have to provide a density.
-	You can check what is in the database by calling the empty function compounds()'''
+	You can check what is in the database by calling the empty function compounds()
+	if length is given (in m!) it returns the transmission instead of the absorption length of a material'''
 	if density: density=density*1e3#ok density was given, since i use Kg/m3 i need to change here
 	if compound is None:
 		print 'please enter a named compound or a formula'
@@ -505,7 +507,11 @@ def get_absorb(compound=None,Energy=None,density=None,from_xraylib=Libswitch):
 		cross=cross*atomar_mass*density
 		total_mass+=atomar_mass
 		df=	df.append(cross)
-	return 100/(df.sum()/total_mass)#I must screw somewhere the numbers up I am a factor 100 wrong but he letters are right. so a cheat here.
+	out=100/(df.sum()/total_mass)#I must screw somewhere the numbers up I am a factor 100 wrong but he letters are right. so a cheat here to get to m
+	if length is None:
+		return out
+	else:
+		return numpy.exp(-length/out)
 def get_EdgeEnergy(Atoms=None,Shells=None,from_xraylib=Libswitch,regen_Database_from_xraylib=False):
 	'''reading and writing the Edge Energy from Xraylib and returning it
 	if the switch \"regn_Database_from_xraylib\" is set to True the local Database will be rebuilt 
@@ -844,6 +850,7 @@ def vary_something(Input=None,what=None,listen=None,is_inner_loop=None):
 			ax.xaxis.set_major_formatter(FuncFormatter(lambda x, pos: '%g'%x))
 			ax.set_xlabel('%s in %s' %(key,zahlen.units['%s'%key]))
 			pylab.title('Emission Intensity vs %s' %key)
+	pylab.show()
 	return varied
 def vary_a_second(Input=None,what_out=None,what_in=None,listen_in=None,listen_out=None):
 	'''this is a tiny wrapper fuction to use the varied input the outer is the one running here and loops over the inner change, the outer change here changes can be done in "zahlen" variable that is handed to vary_something'''
@@ -855,6 +862,7 @@ def vary_a_second(Input=None,what_out=None,what_in=None,listen_in=None,listen_ou
 	fig = pylab.figure()
 	ax = fig.add_subplot(111)
 	pylab.hold('on')
+	pylab.show()
 	x_help=0
 	ylim=[]
 	templist=[]
