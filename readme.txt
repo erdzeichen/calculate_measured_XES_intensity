@@ -50,7 +50,10 @@ calculates the absorption as function of Energy. This can be a single value or a
 get_absorb(compound="Kapton",Energy=range(1000,2000,10)) returns a nice Dataframe with the compund data, if the compounds are not known then you have to enter something like this instead:
 get_absorb(compound="FeC10H10",density=6,Energy=range(1000,2000,10))
 
-
+another intended usage is to actually calculate the transmitted fraction for multiple things e.g.:
+energy=range(6000,7000,10)
+trans=get_absorb(compound="Kapton",Energy=energy,length=50e-6)*get_absorb(compound="FeC10H10",density=6,Energy=energy,length=10e-6)
+trans.plot()
 
 #---------comments-------------------------------
 
